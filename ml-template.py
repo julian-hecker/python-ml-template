@@ -46,16 +46,16 @@ print(y)
 
 # --- Encode Categorical Data ---
 # Initialize Encoder; transforms categorical data into numbers.
-le_x = LabelEncoder()
+le = LabelEncoder()
 # Select categorical data to encode
-x_cat_slc = 0 #!CHANGE THIS: Select Categorical Columns
-x[:, x_cat_slc] = le_x.fit_transform(x[:, x_cat_slc]) 
+x_cat_slc = 0 #!CHANGE THIS: Select X's Categorical Columns
+x[:, x_cat_slc] = le.fit_transform(x[:, x_cat_slc]) 
 # Initialize OHE; Creates "Dummy Array"
 # This prevents categories from being "ordered" numerically
 ohe = OneHotEncoder(categories='auto')
 x = ohe.fit_transform(x)
-le_y = LabelEncoder() #? Why is this here?
-y = le_x.fit_transform(y) #? Is this correct?
+# Encode Y's categories
+y = le.fit_transform(y)
 
 print("Encoded")
 print(x)
@@ -78,12 +78,14 @@ print("Y_Test:\n", y_test)
 # Initialize Scaler
 sc_x = StandardScaler(with_mean=False) # Prevent error
 # Scale all training values
-x_train = sc_x.fit_transform(x_train)
-# Scale all testing values
-x_test = sc_x.transform(x_test)
+x_train[:,:] = sc_x.fit_transform(x_train[:,:])
+# Scale all testing values according to training fit
+x_test[:,:] = sc_x.transform(x_test[:,:])
 
 print("Scaled")
 print(x_train)
+print(y_train)
 print(x_test)
+print(y_test)
 
 
